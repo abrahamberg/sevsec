@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 
+	"github.com/abrahamberg/devsec/internal/cli/runner"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,16 @@ func newRunCommand() *cobra.Command {
 			command := args[1:]
 
 			fmt.Println("project:", project)
-			fmt.Println("command:", command)
+
+			r := runner.New()
+			env := map[string]string{
+				"DEVSEC_PROJECT": project,
+				"DEVSEC_EXAMPLE": "hello",
+			}
+
+			if err := r.Run(cmd.Context(), command, env); err != nil {
+				return err
+			}
 
 			return nil
 		},
