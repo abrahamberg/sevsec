@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/abrahamberg/devsec/internal/cli/command"
 )
 
 func main() {
-	if len(os.Args) > 1 {
-		fmt.Println("Usage: devsec [options]")
-	} else {
-		fmt.Println("Running DevSec with options:", os.Args[1:])
+
+	if err := command.Execute(); err != nil {
+		os.Exit(1)
 	}
+
 }
