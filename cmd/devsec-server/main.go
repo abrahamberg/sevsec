@@ -1,14 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"log"
+
+	"github.com/abrahamberg/devsec/internal/server/config"
+	serverhttp "github.com/abrahamberg/devsec/internal/server/http"
 )
 
 func main() {
-	if len(os.Args) > 1 {
-		fmt.Println("Usage: devsec [options]")
-	} else {
-		fmt.Println("Running DevSec with options:", os.Args[1:])
+
+	cfg := config.Load()
+
+	server := serverhttp.NewServer(cfg)
+
+	if err := server.Run(); err != nil {
+		log.Fatal(err)
 	}
+
 }
