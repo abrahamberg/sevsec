@@ -1,6 +1,9 @@
 package http
 
 import (
+	"net/http"
+
+	"github.com/abrahamberg/devsec/internal/contract"
 	"github.com/abrahamberg/devsec/internal/server/config"
 	"github.com/gin-gonic/gin"
 )
@@ -29,5 +32,26 @@ func NewRouter() *gin.Engine {
 		})
 	})
 
+	r.POST("/api/runtime-env", runtimeEnvHandler)
+
 	return r
+}
+
+func runtimeEnvHandler(c *gin.Context) {
+
+	var req contract.RuntimeEnvRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, contract.ErrorResponse{
+			Error: "invalid request",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, contract.RuntimeEnvResponse{
+		Env: map[string]string{
+			"DEVSEC_PROJECT": req.Project,
+			"SOME_ENV":       "some_value",
+		},
+	})
 }

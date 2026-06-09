@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 
+	"github.com/abrahamberg/devsec/internal/cli/client"
 	"github.com/abrahamberg/devsec/internal/cli/runner"
 	"github.com/spf13/cobra"
 )
@@ -25,9 +26,12 @@ func newRunCommand() *cobra.Command {
 			fmt.Println("project:", project)
 
 			r := runner.New()
-			env := map[string]string{
-				"DEVSEC_PROJECT": project,
-				"DEVSEC_EXAMPLE": "hello",
+
+			api := client.New("http://localhost:8080")
+
+			env, err := api.GetRuntimeEnv(cmd.Context(), project)
+			if err != nil {
+				return err
 			}
 
 			if err := r.Run(cmd.Context(), command, env); err != nil {
