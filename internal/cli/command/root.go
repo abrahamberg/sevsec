@@ -10,5 +10,8 @@ func Execute() error {
 
 	rootCmd.AddCommand(newRunCommand())
 
+	rootCmd.AddCommand(newRunCommand())
+	rootCmd.AddCommand(newServerCommand())
+
 	return rootCmd.Execute()
 }
